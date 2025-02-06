@@ -26,6 +26,14 @@ pipeline {
                 }
             }
         }
+	stage('Tag Docker Image') {
+            steps {
+                script {
+                    // Tag the image with the ECR repository URI
+                    sh "docker tag fastapi-app:${IMAGE_TAG} ${ECR_REPO}:${IMAGE_TAG}"
+                }
+            }
+        }
         stage('Push Docker Image to ECR') {
             steps {
                 script {
