@@ -56,6 +56,7 @@ pipeline {
             }
         }
         stage('Deploy to AppRunner') {
+            steps {
             script {
                 sh """   
                     cat <<EOF > update.json
@@ -71,6 +72,7 @@ pipeline {
                     EOF
                     """
                 
+            }
             }
         }
     }
