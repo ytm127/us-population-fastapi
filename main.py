@@ -8,7 +8,7 @@ app = FastAPI()
 async def root():
     res = requests.get("https://datausa.io/api/data?drilldowns=Nation&measures=Population")
     data = res.json().get("data")
-    return data
+    return {"govos": data}
 
 
 if __name__ == "__main__":
