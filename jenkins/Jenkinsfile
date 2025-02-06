@@ -55,34 +55,6 @@ pipeline {
                 }
             }
         }
-	stage('Deploy to App Runner') {
-    steps {
-        script {
-            // Create the update.json file with the new image configuration.
-            // Ensure that the heredoc marker (EOF) is not indented.
-            sh '''
-cat <<EOF > update.json
-{
-    "ImageRepository": {
-        "ImageIdentifier": "481202595277.dkr.ecr.us-east-1.amazonaws.com/us-population-fastapi:${IMAGE_TAG}",
-        "ImageRepositoryType": "ECR",
-        "ImageConfiguration": {
-            "Port": "80"
-        }
-    }
-}
-EOF
-'''
-
-            // Optionally, print the contents of update.json for debugging.
-            sh 'cat update.json'
-
-            // Use the AWS CLI to update the App Runner service.
-            // This command forces App Runner to pull the new image from ECR.
-            sh "aws apprunner update-service --service-arn ${APP_RUNNER_SERVICE_ARN} --source-configuration file://update.json --region ${AWS_REGION}"
-        }
-    }
-}
     post {
         always {
             echo "Pipeline execution completed."
