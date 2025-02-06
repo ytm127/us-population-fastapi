@@ -55,29 +55,31 @@ pipeline {
                 }
             }
         }
-        stage('Deploy to AppRunner') {
-            steps {
-            script {
-                sh """   
-                    cat <<EOF > update.json
-                    {
-                        "ImageRepository": {
-                            "ImageIdentifier": "${ECR_REPO}:${IMAGE_TAG}",
-                            "ImageRepositoryType": "ECR",
-                            "ImageConfiguration": {
-                                "Port": "80"
-                            }
-                        }
-                    }
-                    EOF
-
-
-                    """
-                sh "aws apprunner update-service --service-arn ${APP_RUNNER_SERVICE_ARN} --source-configuration file://update.json --region ${AWS_REGION}"
-    
-            }
-            }
+	stage('Deploy to App Runner') {
+    steps {
+        script {
+            sh '''
+cat <<EOF > update.json
+{
+    "ImageRepository": {
+        "ImageIdentifier": "481202595277.dkr.ecr.us-east-1.amazonaws.com/us-population-fastapi:${IMAGE_TAG}",
+        "ImageRepositoryType": "ECR",
+        "ImageConfiguration": {
+            "Port": "80"
         }
+    }
+}
+EOF
+'''
+            // For debugging: display the contents of update.json
+            sh 'cat update.json'
+            
+            // Run the AWS CLI update command
+            sh "aws apprunner update-service --service-arn ${APP_RUNNER_SERVICE_ARN} --source-configuration file://update.json --region ${AWS_REGION}"
+        }
+    }
+}
+
     }
     post {
         always {
