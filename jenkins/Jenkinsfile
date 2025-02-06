@@ -55,6 +55,24 @@ pipeline {
                 }
             }
         }
+        stage('Deploy to AppRunner') {
+            script {
+                sh """   
+                    cat <<EOF > update.json
+                    {
+                        "ImageRepository": {
+                            "ImageIdentifier": "${ECR_REPO}:${IMAGE_TAG}",
+                            "ImageRepositoryType": "ECR",
+                            "ImageConfiguration": {
+                                "Port": "80"
+                            }
+                        }
+                    }
+                    EOF
+                    """
+                
+            }
+        }
     }
     post {
         always {
