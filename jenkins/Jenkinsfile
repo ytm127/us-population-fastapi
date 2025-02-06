@@ -7,14 +7,14 @@ pipeline {
         IMAGE_TAG     = "${env.BUILD_ID}"
         
         // ECS settings
-        CLUSTER_NAME  = "your-ecs-cluster"
+        CLUSTER_NAME  = "US-population-fastapi"
         SERVICE_NAME  = "your-ecs-service"
     }
 
     stages {
-        stage('Stage 1') {
+        stage('Start') {
             steps {
-                echo 'Hello world!'
+                echo 'Starting my US-population-fastapi pipeline'
                 sh 'whoami'
             }
         }
