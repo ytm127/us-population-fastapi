@@ -70,8 +70,11 @@ pipeline {
                         }
                     }
                     EOF
+
+                    aws apprunner update-service --service-arn ${APP_RUNNER_SERVICE_ARN} --source-configuration file://update.json --region ${AWS_REGION}
+
                     """
-                sh "aws apprunner update-service --service-arn ${APP_RUNNER_SERVICE_ARN} --source-configuration file://update.json --region ${AWS_REGION}"
+                // sh "aws apprunner update-service --service-arn ${APP_RUNNER_SERVICE_ARN} --source-configuration file://update.json --region ${AWS_REGION}"
     
             }
             }
