@@ -9,6 +9,9 @@ pipeline {
         // ECS settings
         CLUSTER_NAME  = "US-population-fastapi"
         SERVICE_NAME  = "your-ecs-service"
+	
+	APP_RUNNER_SERVICE_ARN = "arn:aws:apprunner:us-east-1:481202595277:service/US-population-fastapi-3/4b737e321f924bae888967e7bce840e8"  
+
     }
 
     stages {
@@ -49,6 +52,30 @@ pipeline {
                 script {
                     // Push the tagged image to ECR
                     sh "docker push ${ECR_REPO}:${IMAGE_TAG}"
+                }
+            }
+        }
+	stage('Deploy to App Runner') {
+            steps {
+                script {
+                    // Create a temporary JSON file with the new image configuration.
+                    // This file will be used to update your App Runner service.
+                    sh """
+                    cat <<EOF > update.json
+                    {
+                        "ImageRepository": {
+                            "ImageIdentifier": "${ECR_REPO}:${IMAGE_TAG}",
+                            "ImageRepositoryType": "ECR",
+                            "ImageConfiguration": {
+                                "Port": "80"
+                            }
+                        }
+                    }
+                    EOF
+                    """
+                    // Update the App Runner service to use the new image.
+                    // This forces App Runner to pull the new image from ECR.
+                    sh "aws apprunner update-service --service-arn ${APP_RUNNER_SERVICE_ARN} --source-configuration file://update.json --region ${AWS_REGION}"
                 }
             }
         }
