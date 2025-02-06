@@ -15,7 +15,7 @@ pipeline {
         stage('Stage 1') {
             steps {
                 echo 'Hello world!'
-                sh 'echo "Hello world from shell"'
+                sh 'whoami'
             }
         }
 	stage('Build Docker Image') {
