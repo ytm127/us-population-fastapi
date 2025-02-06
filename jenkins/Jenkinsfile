@@ -7,6 +7,15 @@ pipeline {
                 sh 'echo "Hello world from shell"'
             }
         }
+	stage('Build Docker Image') {
+            steps {
+                script {
+                    // Build the Docker image locally; tag it with a temporary name
+                    // sh "docker build -t fastapi-app:${IMAGE_TAG} ."	
+                    sh "docker build -t us-population-fastapi-app:123 ."
+                }
+            }
+        }
     }
 }
 
